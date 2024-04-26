@@ -8,10 +8,7 @@ const port = process.env.PORT || 5000
 //------ middlewere ----
 app.use(cors())
 app.use(express.json())
-
-// C73xev8Djfq36NDv
-//  Artistry atelier
-
+  
  
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ot34xl4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -26,9 +23,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
 
+    const craftCollection = client.db('craftDB').collection('craft')
+
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect(); 
+     
+ 
+    app.post('/addcraft', async (req, res) => {
+        const newCraft = req.body
+        const result = await craftCollection.insertOne(newCraft)
+        res.send(result)
+      })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
