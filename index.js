@@ -51,20 +51,36 @@ async function run() {
       res.send(result)
     })
 
+      // ----- update oparation -------
+      app.put('/addcraft/:id', async (req, res) => { 
+        const id = req.params.id
+        const filter = {_id: new ObjectId(id)} 
+        const options = {upsert: true}
+        const updateCraft = req.body
+        const  Craft = {
+          $set: {
+            name: updateCraft.name, 
+            subcategory: updateCraft.subcategory,
+            price: updateCraft.price,
+            rating: updateCraft.rating,
+            customization: updateCraft.customization,
+            description: updateCraft.description,
+            time: updateCraft.time,
+            stockStatus: updateCraft.stockStatus,
+            photo: updateCraft.photo,
+          }
+        }
+        const result = await craftCollection.updateOne(filter,Craft, options)
+        res.send(result)
+    }) 
+
+    //---- get my data by email-----
     app.get('/mylist/:email', async (req, res) => {
         const email = req.params.email
         const result = await craftCollection.find({email}).toArray()
         res.send(result)
 
-    }) 
-    
-    // update oparation
-  //   app.get('/mylist/:id', async (req, res) => { 
-  //     const id = req.params.id
-  //     const query = {_id: new ObjectId(id)}
-  //     const result = await craftCollection.findOne(query)
-  //     res.send(result)
-  // }) 
+    })  
     
 
     // delete oparation
