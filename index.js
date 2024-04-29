@@ -22,19 +22,19 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
-  try {
-
-    const craftCollection = client.db('craftDB').collection('craft')
-
+  try { 
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect(); 
-     
+
+    const craftCollection = client.db('craftDB').collection('craft')
+    const defaultCollection = client.db('craftDB').collection('default') 
  
     app.post('/addcraft', async (req, res) => {
         const newCraft = req.body
         const result = await craftCollection.insertOne(newCraft)
         res.send(result)
       })
+    
 
     // // --- get all data from database  
     app.get('/addcraft', async (req, res) => {
@@ -42,6 +42,13 @@ async function run() {
       const result = await cursor.toArray()
       res.send(result)
     }) 
+    
+    //---- get default data from database ----
+    app.get('/default', async (req, res) => {
+      const cursor = defaultCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
     
     //---- get spesific data by id-----
     app.get('/addcraft/:id', async (req, res) => {
